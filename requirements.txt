@@ -1,0 +1,9 @@
+ConfigSpace==1.2.1
+more-itertools==10.6.0
+networkx==3.4.2
+numpy==2.2.3
+pyparsing==3.2.1
+scipy==1.15.2
+typing_extensions==4.12.2
+-e git+https://github.com/aiplan4eu/unified-planning.git@535d3cb353836d73a16549af1048f8bd6f714217#egg=unified_planning
+-e git+https://github.com/aiplan4eu/up-fast-downward.git@59f9d5fc9ebc84f7c96963ce459f821e64114447#egg=up_fast_downward
