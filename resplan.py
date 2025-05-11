@@ -247,20 +247,8 @@ class ResPlan:
         initial_tupla = ResTupla(s0, self.K, {})
         self.open_list.put(initial_tupla)
 
-        c=0
-        computed = False
-        start = time.time()
         # main loop
         while not self.open_list.empty():
-
-            # convert the time.time - start to seconds
-            if computed:
-                print(f'{c}, \ttempo trascorso: {time.time() - start:.4f}, \tplanner chiamato: {computed}')
-            else:
-                print(f'{c}')
-            c += 1
-            computed = False
-            start = time.time()
             
             tupla = self.open_list.get()
             s,k,V = tupla.values()
@@ -273,9 +261,6 @@ class ResPlan:
                     self.update_policy(s, k, V, action_to_policy)
                 else:
                     plan, trajectory = self.computer(s, k, self.problem, V, self.R_down).compute()
-                    
-                    computed = True
-
                     if plan is None: # there is no resilience
                         self.update_non_resilient(s, k, V)
                     elif k >= 1:
@@ -284,7 +269,7 @@ class ResPlan:
                             self.open_list.put(ResTupla(trajectory[i], k - 1, V | {plan[i]}))
                             self.update_applicable_actions(trajectory[i], plan[i])
                         self.R_up.add(ResTupla(trajectory[-1], k, V))
-                    else: # k = 0
+                    else: # k = 0, the states in the plane are 0 resilient
                         for t, p in zip(trajectory[:-1], plan):
                             self.R_up.add(ResTupla(t,0,V))
                             self.update_policy(t, 0, V, p)
@@ -400,5 +385,3 @@ class ResPlan:
         with SequentialSimulator(problem=self.problem) as simulator:
             new_state = simulator.apply(s, action.action, action.actual_parameters)
             return new_state
-
-
